@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+
+"""
+Simple wrapper for coingecko_collector.py
+"""
+
+import os
+import sys
+import subprocess
+import time
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+root_dir = os.path.abspath(os.path.join(script_dir, "..", ".."))
+collector_path = os.path.join(root_dir, "modules", "collectors", "coingecko_collector.py")
+
+def main():
+    # Check if --silent flag is passed
+    silent_mode = "--silent" in sys.argv
+    test_mode = "--test" in sys.argv
+    
+    args = [sys.executable, collector_path]
+    
+    # Add any arguments
+    if silent_mode:
+        args.append("--silent")
+    if test_mode:
+        args.append("--test")
+    
+    # Run the actual collector
+    process = subprocess.Popen(args)
+    
+    # Wait for a short time then exit if silent mode
+    if silent_mode:
+        time.sleep(1)  # Wait briefly
+        return 0
+    
+    # Otherwise wait for process to complete
+    return process.wait()
+
+if __name__ == "__main__":
+    sys.exit(main())
